@@ -1,0 +1,74 @@
+
+
+services:
+  program_service:
+    build: ./program_service
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./program_service:/app
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    command: python manage.py runserver 0.0.0.0:8001
+
+  chat_service:
+    build: ./chat_service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./chat_service:/app
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    command: python manage.py runserver 0.0.0.0:8002
+
+  bicep_service:
+    build: ./bicep_service
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./bicep_service:/app
+    environment:
+      - MEDIAPIPE_DISABLE_GPU=1
+    command: python manage.py runserver 0.0.0.0:8003
+
+  pushup_service:
+    build: ./pushup_service
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./pushup_service:/app
+    command: python manage.py runserver 0.0.0.0:8004
+
+  users_service:
+    build: ./users-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./users-service:/app
+    command: python manage.py runserver 0.0.0.0:8000
+
+  clients_problems_service:
+    build: ./clients-problems-service
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./clients-problems-service:/app
+    command: python manage.py runserver 0.0.0.0:8005
+
+  subscription_service:
+    build: ./subscription-service
+    ports:
+      - "8006:8006"
+    volumes:
+      - ./subscription-service:/app
+    command: python manage.py runserver 0.0.0.0:8006
+
+  food_detection_service:
+    build: ./food-detction-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./food-detction-service:/app
+    command: python app.py
+
+  

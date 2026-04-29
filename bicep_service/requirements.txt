@@ -1,0 +1,7 @@
+Django>=4.2.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.3.0
+mediapipe==0.10.9
+protobuf<4
+opencv-python-headless>=4.8.1
+numpy>=1.26.0
