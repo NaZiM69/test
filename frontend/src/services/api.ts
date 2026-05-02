@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const USERS_API = 'http://127.0.0.1:8000/api';
+const USERS_API = 'https://cedar-universal-implosive.ngrok-free.dev/api';
 const SUBS_API = 'http://127.0.0.1:8006/api';
 const BICEP_API = 'http://127.0.0.1:8003/api/bicep';
 const PUSHUP_API = 'http://127.0.0.1:8004/api/pushup';
@@ -54,7 +54,7 @@ export const api = {
   createUser: (data: any) => usersApi.post('/users/', data),
   updateUser: (id: number, data: any) => usersApi.put(`/users/${id}/`, data),
   deleteUser: (id: number) => usersApi.delete(`/users/${id}/`),
-  
+
   // Subscriptions Service
   getPlans: () => subsApi.get('/plans/'),
   createPlan: (data: any) => subsApi.post('/plans/', data),

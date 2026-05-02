@@ -44,7 +44,7 @@ const SubscriptionsPage: React.FC = () => {
         {[
           { label: 'Active Now', value: subscriptions.filter(s => s.is_active && !s.is_expired).length, color: 'text-green-500', icon: <CheckCircle2 size={20} /> },
           { label: 'Recently Expired', value: subscriptions.filter(s => s.is_expired).length, color: 'text-red-500', icon: <XCircle size={20} /> },
-          { label: 'Total Revenue (Est)', value: '142,000 DA', color: 'text-blue-500', icon: <CreditCard size={20} /> },
+          { label: 'Total Revenue (Est)', value: '142,000 DA', color: 'text-orange-500', icon: <CreditCard size={20} /> },
         ].map((stat, i) => (
           <div key={i} className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/5 flex items-center justify-between">
             <div>
@@ -65,7 +65,7 @@ const SubscriptionsPage: React.FC = () => {
                 <input 
                   type="text" 
                   placeholder="Filter subscriptions..." 
-                  className="bg-white/5 border border-white/10 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:border-blue-500/50"
+                  className="bg-white/5 border border-white/10 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:border-orange-500/50"
                 />
              </div>
           </div>
@@ -105,7 +105,7 @@ const SubscriptionsPage: React.FC = () => {
               ) : subscriptions.map((sub) => (
                 <tr key={sub.id} className="hover:bg-white/[0.02] transition-colors group">
                   <td className="px-6 py-4">
-                    <span className="font-mono text-xs text-blue-400">#USR-{sub.user_id}</span>
+                    <span className="font-mono text-xs text-orange-400">#USR-{sub.user_id}</span>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">

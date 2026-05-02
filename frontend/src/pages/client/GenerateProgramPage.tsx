@@ -18,6 +18,7 @@ const GenerateProgramPage: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     user_id: JSON.parse(localStorage.getItem('user') || '{}').id,
     name: JSON.parse(localStorage.getItem('user') || '{}').username || 'User',
@@ -48,9 +49,10 @@ const GenerateProgramPage: React.FC = () => {
     try {
       await api.generateProgram(formData);
       navigate('/workout-plan');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to generate program:', err);
-      alert('Could not generate program. Please try again.');
+      const msg = err.response?.data?.detail || 'Failed to generate program. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -60,121 +62,127 @@ const GenerateProgramPage: React.FC = () => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6 animate-in slide-in-from-right duration-300">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white">
-                <Target size={24} />
+          <div className="space-y-10 animate-fade-in">
+            <div className="flex items-center gap-6 mb-12">
+              <div className="w-16 h-16 bg-orange-500 rounded-[1.5rem] flex items-center justify-center text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+                <Target size={28} strokeWidth={1.5} />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Let's get to know you</h2>
-                <p className="text-gray-500 text-sm">We need some basic info to tailor your plan.</p>
+                <h2 className="text-3xl font-light text-white leading-none">Personal <span className="italic font-serif text-orange-500">Profiling</span></h2>
+                <p className="text-gray-500 text-xs uppercase tracking-[0.2em] font-bold mt-2">Start your physical parameters</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Age</label>
-                <div className="relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1">Current Age</label>
+                <div className="relative group">
                   <input 
                     type="number" 
                     name="age" 
                     value={formData.age} 
                     onChange={handleChange}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                    className="w-full bg-black border border-white/10 rounded-2xl py-5 px-8 text-white focus:outline-none focus:border-orange-500/50 transition-all font-light italic font-serif text-xl"
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Goal</label>
-                <select 
-                  name="goal" 
-                  value={formData.goal} 
-                  onChange={handleChange}
-                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-blue-500/50 transition-all appearance-none"
-                >
-                  <option>Build Muscle</option>
-                  <option>Lose Weight</option>
-                  <option>Improve Endurance</option>
-                  <option>General Fitness</option>
-                </select>
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1">Primary Objective</label>
+                <div className="relative">
+                  <select 
+                    name="goal" 
+                    value={formData.goal} 
+                    onChange={handleChange}
+                    className="w-full bg-black border border-white/10 rounded-2xl py-5 px-8 text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none font-light italic font-serif text-xl cursor-pointer"
+                  >
+                    <option>Build Muscle</option>
+                    <option>Lose Weight</option>
+                    <option>Improve Endurance</option>
+                    <option>General Fitness</option>
+                  </select>
+                  <ChevronRight size={18} className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-600 rotate-90 pointer-events-none" />
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <Scale size={14} /> Weight (kg)
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1 flex items-center gap-2">
+                  <Scale size={14} className="text-orange-500" /> Mass (kg)
                 </label>
                 <input 
                   type="number" 
                   name="weight_kg" 
                   value={formData.weight_kg} 
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                  className="w-full bg-black border border-white/10 rounded-2xl py-5 px-8 text-white focus:outline-none focus:border-orange-500/50 transition-all font-light italic font-serif text-xl"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <Ruler size={14} /> Height (cm)
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1 flex items-center gap-2">
+                  <Ruler size={14} className="text-orange-500" /> Stature (cm)
                 </label>
                 <input 
                   type="number" 
                   name="height_cm" 
                   value={formData.height_cm} 
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-blue-500/50 transition-all"
+                  className="w-full bg-black border border-white/10 rounded-2xl py-5 px-8 text-white focus:outline-none focus:border-orange-500/50 transition-all font-light italic font-serif text-xl"
                 />
               </div>
             </div>
 
             <button 
               onClick={handleNext}
-              className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all group"
+              className="w-full py-6 bg-orange-500 hover:bg-white hover:text-black text-white rounded-full font-bold text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all duration-500 group shadow-2xl shadow-orange-500/20"
             >
-              Continue <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              Next Plan <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" strokeWidth={3} />
             </button>
           </div>
         );
       case 2:
         return (
-          <div className="space-y-6 animate-in slide-in-from-right duration-300">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center text-white">
-                <Dumbbell size={24} />
+          <div className="space-y-10 animate-fade-in">
+            <div className="flex items-center gap-6 mb-12">
+              <div className="w-16 h-16 bg-orange-500 rounded-[1.5rem] flex items-center justify-center text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+                <Dumbbell size={28} strokeWidth={1.5} />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Your Experience</h2>
-                <p className="text-gray-500 text-sm">Help us adjust the difficulty.</p>
+                <h2 className="text-3xl font-light text-white leading-none">Experience <span className="italic font-serif text-orange-500">Parameters</span></h2>
+                <p className="text-gray-500 text-xs uppercase tracking-[0.2em] font-bold mt-2">Adjust your program preferences</p>
               </div>
             </div>
 
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <Activity size={14} /> Fitness Level
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1 flex items-center gap-2">
+                  <Activity size={14} className="text-orange-500" /> Proficiency Tier
                 </label>
-                <select 
-                  name="level" 
-                  value={formData.level} 
-                  onChange={handleChange}
-                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-purple-500/50 transition-all appearance-none"
-                >
-                  <option>Beginner</option>
-                  <option>Intermediate</option>
-                  <option>Advanced</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    name="level" 
+                    value={formData.level} 
+                    onChange={handleChange}
+                    className="w-full bg-black border border-white/10 rounded-2xl py-5 px-8 text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none font-light italic font-serif text-xl cursor-pointer"
+                  >
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                  </select>
+                  <ChevronRight size={18} className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-600 rotate-90 pointer-events-none" />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <Calendar size={14} /> Days Available per week
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1 flex items-center gap-2">
+                  <Calendar size={14} className="text-orange-500" /> Training Cycles (Per Week)
                 </label>
                 <div className="flex gap-4">
                   {[2, 3, 4, 5, 6].map(d => (
                     <button 
                       key={d}
                       onClick={() => setFormData(prev => ({ ...prev, days_available: d }))}
-                      className={`flex-1 py-4 rounded-2xl font-bold border transition-all ${formData.days_available === d ? 'bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-500/20' : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'}`}
+                      className={`flex-1 py-5 rounded-2xl font-serif italic text-2xl transition-all duration-500 border ${formData.days_available === d ? 'bg-orange-500 border-orange-400 text-white shadow-2xl shadow-orange-500/30 scale-105 z-10' : 'bg-black border-white/10 text-gray-600 hover:border-orange-500/30'}`}
                     >
                       {d}
                     </button>
@@ -182,37 +190,46 @@ const GenerateProgramPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <Zap size={14} /> Equipment Access
+              <div className="space-y-4">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] ml-1 flex items-center gap-2">
+                  <Zap size={14} className="text-orange-500" /> Logistics Access
                 </label>
-                <select 
-                  name="equipment" 
-                  value={formData.equipment} 
-                  onChange={handleChange}
-                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-purple-500/50 transition-all appearance-none"
-                >
-                  <option>Full Gym</option>
-                  <option>Dumbbells Only</option>
-                  <option>Bodyweight Only</option>
-                  <option>Home Gym</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    name="equipment" 
+                    value={formData.equipment} 
+                    onChange={handleChange}
+                    className="w-full bg-black border border-white/10 rounded-2xl py-5 px-8 text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none font-light italic font-serif text-xl cursor-pointer"
+                  >
+                    <option>Full Gym</option>
+                    <option>Dumbbells Only</option>
+                    <option>Bodyweight Only</option>
+                    <option>Home Gym</option>
+                  </select>
+                  <ChevronRight size={18} className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-600 rotate-90 pointer-events-none" />
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-4">
+            {error && (
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-sm italic font-serif mt-4 text-center">
+                {error}
+              </div>
+            )}
+
+            <div className="flex gap-6 pt-4">
               <button 
                 onClick={handleBack}
-                className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all border border-white/10"
+                className="flex-1 py-6 bg-white/5 hover:bg-white/10 text-gray-500 hover:text-white rounded-full font-bold text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all duration-500 border border-white/10"
               >
-                <ChevronLeft size={18} /> Back
+                <ChevronLeft size={16} strokeWidth={3} /> Return
               </button>
               <button 
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex-[2] py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-xl shadow-blue-500/20"
+                className="flex-[2] py-6 bg-orange-500 hover:bg-white hover:text-black text-white rounded-full font-bold text-[10px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all duration-500 shadow-2xl shadow-orange-500/30 disabled:opacity-30"
               >
-                {loading ? <><Loader2 className="animate-spin" size={18} /> Building Plan...</> : 'Generate My Plan'}
+                {loading ? <><Loader2 className="animate-spin" size={18} /> Generating Plan...</> : 'Start Program'}
               </button>
             </div>
           </div>
@@ -223,12 +240,14 @@ const GenerateProgramPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-10rem)] flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-[#0a0a0a] border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+    <div className="min-h-[calc(100vh-12rem)] flex items-center justify-center p-6 animate-fade-in">
+      <div className="w-full max-w-3xl bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[4rem] p-12 md:p-16 shadow-[0_0_80px_rgba(0,0,0,0.5)] relative overflow-hidden group">
+        <div className="absolute inset-0 bg-orange-500/[0.01] pointer-events-none"></div>
+        
         {/* Progress bar */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-white/5">
+        <div className="absolute top-0 left-0 right-0 h-2 bg-white/5">
           <div 
-            className="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-500"
+            className="h-full bg-orange-500 transition-all duration-1000 ease-out shadow-[0_0_20px_rgba(249,115,22,0.6)]"
             style={{ width: `${(step / 2) * 100}%` }}
           ></div>
         </div>

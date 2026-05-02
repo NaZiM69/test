@@ -12,17 +12,14 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const menuItems: MenuItem[] = [
-    { icon: <LayoutDashboard size={20} />, label: 'My Dashboard', path: '/dashboard' },
-    { icon: <CreditCard size={20} />, label: 'My Subscription', path: '/subscription' },
-   // icon: <Zap size={20} />, label: 'Available Plans', path: '/plans' },
-   // icon: <Calendar size={20} />, label: 'Training Schedule', path: '/schedule' },
-    //icon: <User size={20} />, label: 'My Profile', path: '/profile' },
-    { icon: <Apple size={20} />, label: 'Food Calorie', path: '/food-calorie' },
-    { icon: <Dumbbell size={20} />, label: 'AI Bicep Coach', path: '/bicep-coach' },
-    { icon: <Target size={20} />, label: 'AI Pushup Coach', path: '/pushup-coach' },
-    { icon: <MessageSquare size={20} />, label: 'Coach Chat', path: '/chat' },
-    { icon: <Activity size={20} />, label: 'Workout Plan', path: '/workout-plan' },
-    { icon: <AlertCircle size={20} />, label: 'Support', path: '/support' },
+    { icon: <LayoutDashboard size={18} strokeWidth={1.5} />, label: 'Dashboard', path: '/dashboard' },
+    { icon: <CreditCard size={18} strokeWidth={1.5} />, label: 'Subscription', path: '/subscription' },
+    { icon: <Apple size={18} strokeWidth={1.5} />, label: 'Nutrition', path: '/food-calorie' },
+    { icon: <Dumbbell size={18} strokeWidth={1.5} />, label: 'Bicep Coach', path: '/bicep-coach' },
+    { icon: <Target size={18} strokeWidth={1.5} />, label: 'Pushup Coach', path: '/pushup-coach' },
+    { icon: <MessageSquare size={18} strokeWidth={1.5} />, label: 'Chat', path: '/chat' },
+    { icon: <Activity size={18} strokeWidth={1.5} />, label: 'Workout Plan', path: '/workout-plan' },
+    { icon: <AlertCircle size={18} strokeWidth={1.5} />, label: 'Support', path: '/support' },
   ];
 
 
@@ -33,26 +30,38 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   };
 
   return (
-    <div className="flex h-screen bg-[#050505] text-gray-100 overflow-hidden font-sans">
+    <div className="flex h-screen bg-black text-white overflow-hidden font-sans">
       <Sidebar menuItems={menuItems} onLogout={handleLogout} />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden relative">
+        {/* Subtle Background Glow */}
+        <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-orange-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+
         {/* Header */}
-        <header className="h-20 bg-[#0a0a0a]/50 backdrop-blur-md border-b border-white/5 flex items-center justify-between px-8 z-10">
+        <header className="h-24 bg-black/40 backdrop-blur-xl border-b border-white/10 flex items-center justify-between px-10 z-10">
           <div className="flex items-center gap-4 flex-1">
-             <h2 className="text-xl font-bold">Welcome back, {user.first_name || user.username}!</h2>
+             <h2 className="text-2xl font-light tracking-tight">
+                Welcome back, <span className="italic font-serif text-orange-500">{user.first_name || user.username}</span>
+             </h2>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center gap-6">
+            <button className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-orange-500/10 hover:border-orange-500/50 transition-all text-gray-400 hover:text-orange-500 relative">
+               <Bell size={20} strokeWidth={1.5} />
+               <span className="absolute top-3 right-3 w-2 h-2 bg-orange-500 rounded-full border-2 border-black"></span>
+            </button>
+
+            <div className="h-10 w-px bg-white/10 mx-2"></div>
+
+            <div className="flex items-center gap-4 group cursor-pointer">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold">{user.first_name} {user.last_name}</p>
-                <p className="text-xs text-gray-500 uppercase tracking-tighter">{user.role}</p>
+                <p className="text-xs font-bold uppercase tracking-widest">{user.first_name} {user.last_name}</p>
+                <p className="text-[10px] text-orange-500 font-bold uppercase tracking-tighter opacity-70 group-hover:opacity-100 transition-opacity italic">{user.role}</p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-[1px]">
-                <div className="w-full h-full rounded-[10px] bg-[#0a0a0a] flex items-center justify-center overflow-hidden">
-                   <User size={20} className="text-blue-400" />
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-white/10 p-1 group-hover:border-orange-500/50 transition-all">
+                <div className="w-full h-full rounded-xl bg-black flex items-center justify-center overflow-hidden">
+                   <User size={24} className="text-orange-500" strokeWidth={1.5} />
                 </div>
               </div>
             </div>
@@ -60,11 +69,10 @@ const ClientLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         </header>
 
         {/* Page Body */}
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-10 custom-scrollbar relative z-0">
           {children}
         </div>
         
-        {/* Floating Chat */}
         <FloatingChat />
       </main>
     </div>

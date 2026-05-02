@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CreditCard, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import LogoDoku from './LogoDoku';
 
 export interface MenuItem {
   icon: React.ReactNode;
@@ -17,38 +18,42 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, onLogout }) => {
   const location = useLocation();
 
   return (
-    <aside className="w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col h-full">
-      <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-          <CreditCard className="text-white" size={18} />
-        </div>
-        <span className="text-xl font-bold tracking-tight text-white">IRONCORE<span className="text-blue-500">.</span></span>
+    <aside className="w-72 bg-black border-r border-white/10 flex flex-col h-full overflow-hidden">
+      {/* Branding Section */}
+      <div className="p-8 pb-10">
+        <LogoDoku size="w-32" showText={true} />
       </div>
       
-      <nav className="flex-1 px-4 py-4 space-y-1">
+      {/* Navigation */}
+      <nav className="flex-1 px-4 space-y-2">
         {menuItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+            className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group ${
               location.pathname === item.path 
-                ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5' 
-                : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20' 
+                : 'text-gray-500 hover:text-white hover:bg-white/5'
             }`}
           >
-            {item.icon}
-            <span className="font-medium text-sm">{item.label}</span>
+            <div className={`transition-transform duration-300 group-hover:scale-110 ${
+               location.pathname === item.path ? 'text-white' : 'text-gray-600 group-hover:text-orange-500'
+            }`}>
+              {item.icon}
+            </div>
+            <span className="font-bold text-[10px] uppercase tracking-[0.2em]">{item.label}</span>
           </Link>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-white/5">
+      {/* Footer / Logout */}
+      <div className="p-6 border-t border-white/5">
         <button 
           onClick={onLogout}
-          className="flex items-center gap-3 px-4 py-3 w-full text-gray-400 hover:text-red-400 transition-colors"
+          className="flex items-center gap-4 px-5 py-4 w-full text-gray-600 hover:text-orange-500 hover:bg-orange-500/5 rounded-2xl transition-all duration-300 group"
         >
-          <LogOut size={20} />
-          <span className="font-medium text-sm">Logout</span>
+          <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="font-bold text-[10px] uppercase tracking-[0.2em]">Exit Terminal</span>
         </button>
       </div>
     </aside>
